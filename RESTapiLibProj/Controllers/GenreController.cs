@@ -38,8 +38,11 @@ namespace RESTapiLibProj.Controllers
         public async Task<IActionResult> CreateGenre(string name)
         {
             var newItem = new Genre() { GenreName = name };
+
             dbContext.Genres.Add(newItem);
+
             await dbContext.SaveChangesAsync();
+
             return Ok(newItem);
         }
 
@@ -66,7 +69,7 @@ namespace RESTapiLibProj.Controllers
             }
             dbContext.Genres.Remove(genre);
             await dbContext.SaveChangesAsync();
-            return Ok();
+            return Ok(genre);
         }
     }
 }

@@ -53,10 +53,12 @@ public partial class BooksLibraryContext : DbContext
 
             entity.HasOne(d => d.Author).WithMany(p => p.Books)
                 .HasForeignKey(d => d.AuthorId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Book_fk_Author");
 
             entity.HasOne(d => d.Genre).WithMany(p => p.Books)
                 .HasForeignKey(d => d.GenreId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Book_fk_Genre");
         });
 

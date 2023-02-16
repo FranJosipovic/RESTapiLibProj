@@ -7,7 +7,8 @@ public partial class Genre
 {
     public int Id { get; set; }
 
-    public string? GenreName { get; set; }
+    public string GenreName { get; set; } = null!;
 
     public virtual ICollection<Book> Books { get; } = new List<Book>();
+
 }

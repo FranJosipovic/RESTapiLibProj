@@ -45,19 +45,18 @@ namespace RESTapiLibProj.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAuthor(int id, string name, int year)
+        public async Task<IActionResult> UpdateAuthor(int id, string? name, int year)
         {
             var author = await dbContext.Authors.FindAsync(id);
 
             if (author == null) { return NotFound(); }
 
-            author.AuthorName = name;
+            author.AuthorName = name ?? author.AuthorName;
 
-            if (year != 0)
-            {
-                author.YearOfBirth = year;
-            }
+            author.YearOfBirth = year > 0 ? year : author.YearOfBirth;
+
             await dbContext.SaveChangesAsync();
+
             return Ok(author);
         }
 
@@ -65,13 +64,13 @@ namespace RESTapiLibProj.Controllers
         public async Task<IActionResult> DeleteAuthor(int id)
         {
             var author = await dbContext.Authors.FindAsync(id);
-            if(author == null)
+            if (author == null)
             {
                 return NotFound();
             }
             dbContext.Authors.Remove(author);
             await dbContext.SaveChangesAsync();
-            return Ok();
+            return Ok(author);
         }
     }
 }
