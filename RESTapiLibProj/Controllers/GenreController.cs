@@ -20,7 +20,7 @@ namespace RESTapiLibProj.Controllers
         public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
         {
             var result = await dbContext.Genres.ToListAsync();
-            return result;
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
@@ -31,11 +31,11 @@ namespace RESTapiLibProj.Controllers
             {
                 return NotFound();
             }
-            return result;
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateGenre(string name)
+        public async Task<ActionResult> CreateGenre(string name)
         {
             var newItem = new Genre() { GenreName = name };
 
@@ -47,7 +47,7 @@ namespace RESTapiLibProj.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateGenre(int id, string name)
+        public async Task<ActionResult> UpdateGenre(int id, string name)
         {
             var genre = await dbContext.Genres.FindAsync(id);
 
@@ -60,7 +60,7 @@ namespace RESTapiLibProj.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteGenre(int id)
+        public async Task<ActionResult> DeleteGenre(int id)
         {
             var genre = await dbContext.Genres.FindAsync(id);
             if (genre == null)
