@@ -61,12 +61,12 @@ namespace RESTapiLibProj.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateBook(string bookName, int authorId, int genreId, DateTime CreatedAt)
         {
-            bool authorExists = await dbContext.Authors.AnyAsync(author => author.Id == authorId);
-            if(!authorExists) 
+            bool authorExists = await Exists(dbContext.Authors,authorId);
+            if (!authorExists) 
             {
                 return BadRequest("Author doesn't exist");
             }
-            bool genreExists = await dbContext.Genres.AnyAsync(genre => genre.Id == genreId);
+            bool genreExists = await Exists(dbContext.Genres,genreId);
             if (!genreExists)
             {
                 return BadRequest("Genre doesn't exist");
@@ -91,7 +91,7 @@ namespace RESTapiLibProj.Controllers
 
             if (authorId != null)
             {
-                bool exists = await dbContext.Authors.AnyAsync(author => author.Id == authorId);
+                bool exists = await Exists(dbContext.Authors, (int)authorId);
                 if (exists)
                 {
                     book.AuthorId = (int)authorId;
@@ -104,7 +104,7 @@ namespace RESTapiLibProj.Controllers
 
             if (genreId != null)
             {
-                bool exists = await dbContext.Genres.AnyAsync(genre => genre.Id == genreId);
+                bool exists = await Exists(dbContext.Genres, (int)genreId);
                 if (exists)
                 {
                     book.AuthorId = (int)genreId;
@@ -126,7 +126,7 @@ namespace RESTapiLibProj.Controllers
                     book.CreatedAt = (DateTime)createdAt;
                 }
             }
-
+            
             book.BookName = name ?? book.BookName;
 
             await dbContext.SaveChangesAsync();
@@ -142,6 +142,11 @@ namespace RESTapiLibProj.Controllers
             dbContext.Books.Remove(book);
             await dbContext.SaveChangesAsync();
             return Ok(book);
+        }
+
+        private async Task<bool> Exists<T>(DbSet<T> dbSet,int id) where T : class
+        {
+            return await dbSet.FindAsync(id) != null;
         }
     }
 }
